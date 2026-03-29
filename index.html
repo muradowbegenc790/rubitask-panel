@@ -3,49 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RubiTask - Güvenli Giriş</title>
+    <title>RubiTask Doğrulama</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { background-color: #0f172a; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .kart { background-color: white; width: 320px; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo { color: #2563eb; font-size: 26px; font-weight: bold; margin-bottom: 5px; }
-        .alt-metin { color: #475569; font-size: 14px; margin-bottom: 25px; }
+        .kart { background-color: white; width: 300px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .logo { color: #2563eb; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
         .google-btn { 
             background: white; color: #444; padding: 12px; border: 1px solid #ddd; 
             border-radius: 10px; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; width: 100%; font-weight: 600; transition: 0.2s;
+            justify-content: center; width: 100%; font-weight: 600;
         }
-        .spinner {
-            display: none; width: 18px; height: 18px; border: 3px solid #f3f3f3;
-            border-top: 3px solid #2563eb; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-right: 10px;
-        }
+        .spinner { display: none; width: 16px; height: 16px; border: 2px solid #f3f3f3; border-top: 2px solid #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .ipucu { font-size: 11px; color: #94a3b8; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="kart">
         <div class="logo">RubiTask</div>
-        <p class="alt-metin">Devam etmek için hesabını doğrula</p>
-        <button class="google-btn" id="loginBtn" onclick="onayla()">
+        <button class="google-btn" id="mainBtn" onclick="onayla()">
             <div class="spinner" id="loader"></div>
-            <img id="gLogo" src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18" style="margin-right: 12px;">
+            <img id="gLogo" src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18" style="margin-right: 10px;">
             <span id="btnText">Google Hesabı ile Onayla</span>
         </button>
-        <div class="ipucu">🔒 Telegram üzerinden güvenli bağlantı.</div>
     </div>
+
     <script>
         const tg = window.Telegram.WebApp;
+        tg.ready(); // Telegram'a "hazırım" mesajı gönderir
         tg.expand();
+
         function onayla() {
+            // Görsel efektler
             document.getElementById('loader').style.display = 'block';
             document.getElementById('gLogo').style.display = 'none';
-            document.getElementById('btnText').innerText = 'Doğrulanıyor...';
-            setTimeout(() => {
+            document.getElementById('btnText').innerText = 'Onaylanıyor...';
+
+            // KRİTİK NOKTA: Veriyi gönder ve yarım saniye sonra kapat
+            try {
                 tg.sendData("giriş_yapıldı"); 
-                tg.close();
-            }, 1200);
+                setTimeout(() => {
+                    tg.close(); 
+                }, 600);
+            } catch (e) {
+                alert("Hata oluştu, lütfen tekrar deneyin.");
+            }
         }
     </script>
 </body>
