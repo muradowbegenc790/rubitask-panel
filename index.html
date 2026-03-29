@@ -6,16 +6,32 @@
     <title>RubiTask - Güvenli Giriş</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background-color: #0f172a; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { background-color: #0f172a; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; }
         .kart { background-color: white; width: 320px; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo { color: #2563eb; font-size: 26px; font-weight: bold; margin-bottom: 10px; }
+        .logo { color: #2563eb; font-size: 26px; font-weight: bold; margin-bottom: 5px; }
         .alt-metin { color: #475569; font-size: 14px; margin-bottom: 25px; }
+        
         .google-btn { 
             background: white; color: #444; padding: 12px; border: 1px solid #ddd; 
             border-radius: 10px; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; width: 100%; font-weight: 600; transition: 0.2s;
+            justify-content: center; width: 100%; font-weight: 600; font-size: 15px;
+            position: relative; overflow: hidden; transition: 0.2s;
         }
-        .google-btn:hover { background: #f8f9fa; }
+
+        /* Yükleniyor Döngüsü */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .ipucu { font-size: 11px; color: #94a3b8; margin-top: 20px; }
     </style>
 </head>
@@ -23,20 +39,29 @@
     <div class="kart">
         <div class="logo">RubiTask</div>
         <p class="alt-metin">Devam etmek için hesabını doğrula</p>
-        <button class="google-btn" onclick="onayla()">
-        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18" style="margin-right: 12px;">
-
- 
-            Google Hesabı ile Onayla
+        <button class="google-btn" id="loginBtn" onclick="onayla()">
+            <div class="spinner" id="loader"></div>
+            <img id="gLogo" src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18" style="margin-right: 12px;">
+            <span id="btnText">Google Hesabı ile Onayla</span>
         </button>
-        <div class="ipucu">🔒 Telegram hesabınızla güvenli bağlantı kurulur.</div>
+        <div class="ipucu">🔒 Telegram üzerinden güvenli bağlantı.</div>
     </div>
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+
         function onayla() {
-            tg.sendData("giriş_yapıldı"); 
-            tg.close();
+            // Animasyonu başlat
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('gLogo').style.display = 'none';
+            document.getElementById('btnText').innerText = 'Doğrulanıyor...';
+            document.getElementById('loginBtn').style.opacity = '0.7';
+            
+            // 1.5 saniye beklet (Efekt için) ve veriyi gönder
+            setTimeout(() => {
+                tg.sendData("giriş_yapıldı"); 
+                tg.close();
+            }, 1500);
         }
     </script>
 </body>
